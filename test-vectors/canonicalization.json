@@ -1,0 +1,122 @@
+{
+  "valid": [
+    {
+      "name": "empty object",
+      "input": "{}",
+      "canonical": "{}",
+      "sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+    },
+    {
+      "name": "empty array",
+      "input": "[]",
+      "canonical": "[]",
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "name": "literals",
+      "input": "[null, true, false]",
+      "canonical": "[null,true,false]",
+      "sha256": "37257214f22b92121c5ff4d7e29ed2d31b3f1129ee698e96e581ec05cb2e3cf7"
+    },
+    {
+      "name": "integers",
+      "input": "[0, -1, 9007199254740991, -9007199254740991]",
+      "canonical": "[0,-1,9007199254740991,-9007199254740991]",
+      "sha256": "d1f4b91349edc7ebd49ff1de73304f618c38a7456b5e36df82573d372466fff6"
+    },
+    {
+      "name": "whitespace is removed",
+      "input": "{ \"a\" : 1 ,\n \"b\" : [ 1 , 2 ] }",
+      "canonical": "{\"a\":1,\"b\":[1,2]}",
+      "sha256": "8baa73198470c7bb4c3ce142a8fd651affc0310d878bb9bd159e37a573fb4874"
+    },
+    {
+      "name": "members are sorted",
+      "input": "{\"b\":1,\"a\":2,\"aa\":3,\"A\":4,\"\":5}",
+      "canonical": "{\"\":5,\"A\":4,\"a\":2,\"aa\":3,\"b\":1}",
+      "sha256": "a6a61d61874dce726d782ea47b37a0b5d0fe2e5c36c9bc64639c3b1a3778c029"
+    },
+    {
+      "name": "nested members are sorted",
+      "input": "{\"z\":{\"y\":1,\"x\":{\"b\":1,\"a\":2}},\"a\":[{\"d\":1,\"c\":2}]}",
+      "canonical": "{\"a\":[{\"c\":2,\"d\":1}],\"z\":{\"x\":{\"a\":2,\"b\":1},\"y\":1}}",
+      "sha256": "08cf36ba9c1530d2e1326be4c9a243a40b806989025dc323be9a9e84810beef3"
+    },
+    {
+      "name": "sorting uses UTF-16 code units",
+      "input": "{\"\\ufb33\":1,\"\\ud83d\\ude00\":2,\"\\u20ac\":3}",
+      "canonical": "{\"€\":3,\"😀\":2,\"דּ\":1}",
+      "sha256": "5c180c101f0b15741b8ed5d221a0202249b89a245c1cb9c01279ef2bdfc4a31e"
+    },
+    {
+      "name": "control characters use short escapes",
+      "input": "\"\\u0008\\u0009\\u000a\\u000c\\u000d\"",
+      "canonical": "\"\\b\\t\\n\\f\\r\"",
+      "sha256": "6e62a535b04fecef3e63e0a67bc2a0657383132fed040cbe7fcb725ed72bae27"
+    },
+    {
+      "name": "other control characters use lowercase hex",
+      "input": "\"\\u0000\\u001F\\u007f\"",
+      "canonical": "\"\\u0000\\u001f\"",
+      "sha256": "dc5086a147ac8c34ce6ba78fdf00f33f1c891a8ded595a7cfd188483d64d6068"
+    },
+    {
+      "name": "quote and backslash",
+      "input": "\"\\\"\\\\\\/\"",
+      "canonical": "\"\\\"\\\\/\"",
+      "sha256": "106814b96b4576ad5efb709458f6a5e1d0b0653cf234738e0ccc6c435bdef084"
+    },
+    {
+      "name": "escaped non-ASCII is emitted literally",
+      "input": "\"\\u00e9\\u20ac\\ud83d\\ude00\"",
+      "canonical": "\"é€😀\"",
+      "sha256": "c99965c60975ed0c46a51eed45c4a8100adc6f8cb920916c9c7c18df9ef66274"
+    },
+    {
+      "name": "no Unicode normalization",
+      "input": "[\"\\u00e9\",\"e\\u0301\"]",
+      "canonical": "[\"é\",\"é\"]",
+      "sha256": "4f9aefe2a56dde33aa0522021cb5e8692f35b700043dbee664b3611e2b92f724"
+    },
+    {
+      "name": "array order is kept",
+      "input": "[3,1,2]",
+      "canonical": "[3,1,2]",
+      "sha256": "51bda7ab4e44726cde71fcb6e4b515357059bb6b6dd5146d1fc50f73f11678c6"
+    }
+  ],
+  "rejected": [
+    {
+      "name": "fraction",
+      "input": "1.5"
+    },
+    {
+      "name": "exponent",
+      "input": "1e3"
+    },
+    {
+      "name": "fraction that equals an integer",
+      "input": "1.0"
+    },
+    {
+      "name": "integer above 2^53-1",
+      "input": "9007199254740992"
+    },
+    {
+      "name": "duplicate member",
+      "input": "{\"a\":1,\"a\":2}"
+    },
+    {
+      "name": "NaN",
+      "input": "NaN"
+    },
+    {
+      "name": "lone surrogate",
+      "input": "\"\\ud800\""
+    },
+    {
+      "name": "trailing comma",
+      "input": "[1,]"
+    }
+  ]
+}

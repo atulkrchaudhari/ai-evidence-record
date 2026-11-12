@@ -1,0 +1,12 @@
+{
+  "spec": "aer-checkpoint/0.1",
+  "chain_id": "3f1c2a9e-7b64-4d0a-9c55-0e6a1b2c3d4e",
+  "sequence": 5,
+  "record_hash": "9500630c0bae41b19697b96861ae7d7acc61689476ad3314af95c265fba4e731",
+  "issued_at": "2026-11-12T10:01:00.000Z",
+  "signature": {
+    "alg": "ed25519",
+    "key_id": "56475aa75463474c",
+    "value": "gDxD9dx_9msDWQQsLmMCZHo17eko3beCgP-aIpPTITG4eLoNUqTH-Bx1AgUzROwgRN-af94Lw8Zm1GWo1Ha3DQ"
+  }
+}

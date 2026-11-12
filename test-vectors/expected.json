@@ -1,0 +1,144 @@
+{
+  "description": "Expected verifier output. 'errors' lists [code, line] pairs. A line of null means the finding is about the log as a whole. Warnings are not listed.",
+  "cases": [
+    {
+      "log": "valid.jsonl",
+      "ok": true,
+      "errors": []
+    },
+    {
+      "log": "valid.jsonl",
+      "checkpoint": "checkpoint.json",
+      "public_key": "checkpoint-public-key.json",
+      "ok": true,
+      "errors": []
+    },
+    {
+      "log": "valid.jsonl",
+      "checkpoint": "checkpoint-unsigned.json",
+      "ok": true,
+      "errors": []
+    },
+    {
+      "log": "tampered-field.jsonl",
+      "ok": false,
+      "errors": [
+        [
+          "E_RECORD_HASH",
+          3
+        ]
+      ]
+    },
+    {
+      "log": "tampered-rehashed.jsonl",
+      "ok": false,
+      "errors": [
+        [
+          "E_PREV_HASH",
+          4
+        ]
+      ]
+    },
+    {
+      "log": "deleted-record.jsonl",
+      "ok": false,
+      "errors": [
+        [
+          "E_SEQUENCE",
+          3
+        ],
+        [
+          "E_PREV_HASH",
+          3
+        ]
+      ]
+    },
+    {
+      "log": "reordered.jsonl",
+      "ok": false,
+      "errors": [
+        [
+          "E_SEQUENCE",
+          3
+        ],
+        [
+          "E_PREV_HASH",
+          3
+        ],
+        [
+          "E_SEQUENCE",
+          4
+        ],
+        [
+          "E_PREV_HASH",
+          4
+        ],
+        [
+          "E_SEQUENCE",
+          5
+        ],
+        [
+          "E_PREV_HASH",
+          5
+        ]
+      ]
+    },
+    {
+      "log": "truncated.jsonl",
+      "ok": true,
+      "errors": []
+    },
+    {
+      "log": "truncated.jsonl",
+      "checkpoint": "checkpoint.json",
+      "public_key": "checkpoint-public-key.json",
+      "ok": false,
+      "errors": [
+        [
+          "E_CHECKPOINT",
+          null
+        ]
+      ]
+    },
+    {
+      "log": "rewritten.jsonl",
+      "ok": true,
+      "errors": []
+    },
+    {
+      "log": "rewritten.jsonl",
+      "checkpoint": "checkpoint.json",
+      "public_key": "checkpoint-public-key.json",
+      "ok": false,
+      "errors": [
+        [
+          "E_CHECKPOINT",
+          6
+        ]
+      ]
+    },
+    {
+      "log": "valid.jsonl",
+      "checkpoint": "checkpoint-forged.json",
+      "public_key": "checkpoint-public-key.json",
+      "ok": false,
+      "errors": [
+        [
+          "E_SIGNATURE",
+          null
+        ]
+      ]
+    },
+    {
+      "log": "valid.jsonl",
+      "checkpoint": "checkpoint.json",
+      "ok": false,
+      "errors": [
+        [
+          "E_SIGNATURE",
+          null
+        ]
+      ]
+    }
+  ]
+}
