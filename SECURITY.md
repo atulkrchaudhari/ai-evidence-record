@@ -15,4 +15,4 @@ You can expect an acknowledgement within 5 working days.
 
 ## Test keys
 
-`test-vectors/` contains a public key and signatures made with an Ed25519 key derived from a published seed, and an HMAC key written in `generate.py`. These are test values. They protect nothing and are not secrets.
+`test-vectors/` contains a public key (as a JSON Web Key) and signatures made with an Ed25519 key derived from a published seed, and an HMAC key written in `generate.py`. These are test values. They protect nothing and are not secrets.

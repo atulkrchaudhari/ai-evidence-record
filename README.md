@@ -96,13 +96,13 @@ $ aer checkpoint decisions.jsonl --private-key signer.pem --out checkpoint.json
 $ aer verify decisions.jsonl --checkpoint checkpoint.json --public-key signer.pub
 ```
 
-Keep the checkpoint, and the signing key, away from whoever administers the log. With a checkpoint the verifier detects the two things a chain alone cannot:
+`--public-key` accepts PEM or a JSON Web Key. Keep the checkpoint, and the signing key, away from whoever administers the log. With a checkpoint the verifier detects the two things a chain alone cannot:
 
 ```
-$ aer verify test-vectors/truncated.jsonl --checkpoint test-vectors/checkpoint.json --public-key test-vectors/checkpoint-public-key.pem
+$ aer verify test-vectors/truncated.jsonl --checkpoint test-vectors/checkpoint.json --public-key test-vectors/checkpoint-public-key.json
 E_CHECKPOINT  log ends at sequence 3 but the checkpoint covers sequence 5: records are missing
 
-$ aer verify test-vectors/rewritten.jsonl --checkpoint test-vectors/checkpoint.json --public-key test-vectors/checkpoint-public-key.pem
+$ aer verify test-vectors/rewritten.jsonl --checkpoint test-vectors/checkpoint.json --public-key test-vectors/checkpoint-public-key.json
 E_CHECKPOINT  line 6: record at sequence 5 does not match the checkpoint: history was rewritten
 ```
 

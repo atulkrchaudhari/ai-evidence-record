@@ -7,4 +7,3 @@ __pycache__/
 build/
 dist/
 *.pem
-!test-vectors/checkpoint-public-key.pem

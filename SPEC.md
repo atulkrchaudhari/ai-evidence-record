@@ -285,7 +285,7 @@ A hash chain has two limits. Removing records from the end leaves a shorter chai
 
 The signature is Ed25519 (RFC 8032) over the canonical form of the checkpoint without its `signature` member.
 
-This specification does not define how a verifier obtains or trusts a public key. When no other convention applies, `key_id` SHOULD be the first 16 hexadecimal characters of the SHA-256 of the 32-byte public key.
+This specification does not define how a verifier obtains or trusts a public key. Public keys in the conformance vectors are given as JSON Web Keys (RFC 8037). When no other convention applies, `key_id` SHOULD be the first 16 hexadecimal characters of the SHA-256 of the 32-byte public key.
 
 ### 8.3 Example
 
@@ -412,6 +412,7 @@ A **verifier** conforms if, for every case in `test-vectors/expected.json`, it r
 
 - RFC 3161, Internet X.509 Public Key Infrastructure Time-Stamp Protocol
 - RFC 6962, Certificate Transparency
+- RFC 8037, CFRG Elliptic Curve Diffie-Hellman (ECDH) and Signatures in JSON Object Signing and Encryption (JOSE)
 - Regulation (EU) 2024/1689 (Artificial Intelligence Act), Articles 12, 19 and 26
 - MITRE ATLAS, mitigation AML.M0024 (AI Telemetry Logging)
 - JSON Lines, jsonlines.org
