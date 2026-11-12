@@ -82,7 +82,7 @@ def main(argv: list[str] | None = None) -> int:
     verify = sub.add_parser("verify", help="verify a log, optionally against a checkpoint")
     verify.add_argument("log")
     verify.add_argument("--checkpoint", help="checkpoint JSON file")
-    verify.add_argument("--public-key", help="Ed25519 public key (PEM) for a signed checkpoint")
+    verify.add_argument("--public-key", help="Ed25519 public key for a signed checkpoint, as PEM or as a JSON Web Key")
     verify.add_argument("--json", action="store_true", help="machine-readable output")
     verify.set_defaults(func=_cmd_verify)
 

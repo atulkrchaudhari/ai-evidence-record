@@ -72,12 +72,27 @@ def load_private_key(pem: bytes) -> Any:
     return key
 
 
-def load_public_key(pem: bytes) -> Any:
+def load_public_key(data: bytes) -> Any:
+    """Load an Ed25519 public key from PEM or from a JSON Web Key (RFC 8037)."""
     _, serialization, _, Ed25519PublicKey = _crypto()
-    key = serialization.load_pem_public_key(pem)
+    if data.lstrip().startswith(b"{"):
+        jwk = strict_loads(data.decode("utf-8"))
+        if not isinstance(jwk, dict) or jwk.get("kty") != "OKP" or jwk.get("crv") != "Ed25519" or not isinstance(jwk.get("x"), str):
+            raise ValueError("not an Ed25519 public key in JWK form")
+        if "d" in jwk:
+            raise ValueError("this JWK contains a private key: supply the public key only")
+        return Ed25519PublicKey.from_public_bytes(_b64url_decode(jwk["x"]))
+    key = serialization.load_pem_public_key(data)
     if not isinstance(key, Ed25519PublicKey):
         raise ValueError("not an Ed25519 public key")
     return key
+
+
+def public_key_to_jwk(public_key: Any) -> dict[str, str]:
+    """Return the public key as a JSON Web Key (RFC 8037), with its default key identifier."""
+    _, serialization, _, _ = _crypto()
+    raw = public_key.public_bytes(serialization.Encoding.Raw, serialization.PublicFormat.Raw)
+    return {"kty": "OKP", "crv": "Ed25519", "x": _b64url(raw), "kid": key_id_for(public_key)}
 
 
 def make_checkpoint(result: VerificationResult, *, private_key: Any = None, key_id: str | None = None, issued_at: str | None = None) -> dict[str, Any]:
