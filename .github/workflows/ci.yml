@@ -1,0 +1,46 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - run: pip install -e ".[dev]"
+      - run: ruff check .
+      - run: pytest -q
+      - name: Conformance vectors verify from the command line
+        run: |
+          aer verify test-vectors/valid.jsonl --checkpoint test-vectors/checkpoint.json --public-key test-vectors/checkpoint-public-key.json
+          ! aer verify test-vectors/tampered-field.jsonl
+          ! aer verify test-vectors/truncated.jsonl --checkpoint test-vectors/checkpoint.json --public-key test-vectors/checkpoint-public-key.json
+
+  core-without-dependencies:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -e .
+      - name: Write and verify with the standard library only
+        run: |
+          python -c "
+          from aer import ChainWriter, verify_log
+          w = ChainWriter('t.jsonl')
+          for _ in range(3):
+              w.append(actor={'principal': 'p', 'agent': 'a'}, event={'type': 'input'}, decision={'verdict': 'allow', 'policy': {'id': 'd', 'version': '1'}})
+          assert verify_log('t.jsonl').ok
+          "
+          aer verify t.jsonl
+          aer verify test-vectors/valid.jsonl
