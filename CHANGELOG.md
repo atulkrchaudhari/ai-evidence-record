@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- TypeScript verifier started in `ts/`. First module: canonical JSON and strict parsing (`ts/src/canonical.ts`), with no runtime dependencies. It passes the 14 valid and 8 rejected cases in `test-vectors/canonicalization.json`. Record hashing, chain verification, checkpoints and the command line tool are not written yet.
+
 ## 0.1.0
 
 First public draft.
