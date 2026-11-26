@@ -17,7 +17,7 @@ VERDICTS = ("allow", "block", "redact", "escalate")
 DIGEST_ALGS = ("sha-256", "hmac-sha-256")
 
 _HEX64 = re.compile(r"^[0-9a-f]{64}$")
-_TIMESTAMP = re.compile(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{1,9})?Z$")
+_TIMESTAMP = re.compile(r"^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(\.[0-9]{1,9})?Z$")
 _EXT_KEY = re.compile(r"^[a-z0-9][a-z0-9._-]*$")
 
 _TOP_REQUIRED = (
@@ -74,7 +74,7 @@ def _check_digest(obj: Any, path: str, errors: list[str]) -> None:
     alg = obj.get("alg")
     if alg not in DIGEST_ALGS:
         errors.append(f"{path}.alg: must be one of {', '.join(DIGEST_ALGS)}")
-    if not (isinstance(obj.get("value"), str) and _HEX64.match(obj["value"])):
+    if not (isinstance(obj.get("value"), str) and _HEX64.fullmatch(obj["value"])):
         errors.append(f"{path}.value: must be 64 lowercase hexadecimal characters")
     if alg == "hmac-sha-256" and not _is_str(obj.get("key_id")):
         errors.append(f"{path}.key_id: required with hmac-sha-256")
@@ -99,10 +99,10 @@ def validate_record(record: Any) -> list[str]:
             errors.append(f"record.{name}: must be a non-empty string")
     if "sequence" in record and not (_is_int(record["sequence"]) and record["sequence"] >= 0):
         errors.append("record.sequence: must be a non-negative integer")
-    if "timestamp" in record and not (isinstance(record["timestamp"], str) and _TIMESTAMP.match(record["timestamp"])):
+    if "timestamp" in record and not (isinstance(record["timestamp"], str) and _TIMESTAMP.fullmatch(record["timestamp"])):
         errors.append("record.timestamp: must be RFC 3339 in UTC with a 'Z' suffix")
     for name in ("prev_hash", "record_hash"):
-        if name in record and not (isinstance(record[name], str) and _HEX64.match(record[name])):
+        if name in record and not (isinstance(record[name], str) and _HEX64.fullmatch(record[name])):
             errors.append(f"record.{name}: must be 64 lowercase hexadecimal characters")
 
     actor = record.get("actor")
@@ -161,7 +161,7 @@ def validate_record(record: Any) -> list[str]:
             errors.append("record.ext: must be an object")
         else:
             for key in record["ext"]:
-                if not _EXT_KEY.match(key):
+                if not _EXT_KEY.fullmatch(key):
                     errors.append(f"record.ext.{key}: extension names use lowercase letters, digits, '.', '_' and '-'")
     return errors
 
