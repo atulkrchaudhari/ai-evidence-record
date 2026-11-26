@@ -68,6 +68,26 @@ def test_validation_errors(mutate, fragment):
     assert any(fragment in e for e in errors), errors
 
 
+@pytest.mark.parametrize(
+    "mutate, fragment",
+    [
+        (lambda r: r.update(timestamp="2026-01-01T00:00:00Z\n"), "record.timestamp"),
+        (lambda r: r.update(timestamp="\u0662\u0660\u0662\u0666-01-01T00:00:00Z"), "record.timestamp"),
+        (lambda r: r.update(timestamp="2026-01-01T00:00:00.\uff11Z"), "record.timestamp"),
+        (lambda r: r.update(prev_hash="0" * 64 + "\n"), "record.prev_hash"),
+        (lambda r: r.update(record_hash=r["record_hash"] + "\n"), "record.record_hash"),
+        (lambda r: r["event"].update(content_digest={"alg": "sha-256", "value": "0" * 64 + "\n"}), "content_digest.value"),
+        (lambda r: r.update(ext={"acme.id\n": 1}), "record.ext.acme.id"),
+    ],
+)
+def test_patterns_match_the_whole_string_in_ascii(mutate, fragment):
+    # A trailing line feed and digits outside ASCII are not part of any permitted form.
+    record = copy.deepcopy(_record())
+    mutate(record)
+    errors = validate_record(record)
+    assert any(fragment in e for e in errors), errors
+
+
 def test_build_refuses_invalid_input():
     with pytest.raises(ValueError):
         _record(event={"type": "tool_call"})
